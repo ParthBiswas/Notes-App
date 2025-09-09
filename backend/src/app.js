@@ -9,21 +9,8 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser()); 
 
-const allowedOrigins = [
-  "http://localhost:5173",                
-  "https://notes-app-unnu.onrender.com"   
-];
-
 app.use(cors({
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like Postman)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    } else {
-      return callback(new Error("Not allowed by CORS"));
-    }
-  },
+  origin: "http://localhost:5173",
   credentials: true
 }));
 
