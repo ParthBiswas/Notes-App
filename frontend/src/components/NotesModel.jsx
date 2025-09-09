@@ -20,7 +20,7 @@ const NotesModel = ({isOpen, onClose, note, onSave}) => {
       if (note) {
         // Update note
         const { data } = await axios.put(
-          `http://localhost:5000/api/notes/update/${note._id}`,
+          `${__API_URL__}/api/notes/update/${note._id}`,
           payload,
           { withCredentials: true }
         );
@@ -28,7 +28,7 @@ const NotesModel = ({isOpen, onClose, note, onSave}) => {
       } else {
         // Create new note
         const { data } = await axios.post(
-          "http://localhost:5000/api/notes/create",
+          `${__API_URL__}/api/notes/create`,
           payload,
           { withCredentials: true }
         );

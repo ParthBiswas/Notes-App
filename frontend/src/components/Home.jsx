@@ -15,7 +15,7 @@ const Home = () => {
       const searchParams =new URLSearchParams(location.search);
       const search = searchParams.get("search") || "";
 
-      const {data} = await axios.get("http://localhost:5000/api/notes/find",{
+      const {data} = await axios.get(`${__API_URL__}/api/notes/find`,{
         withCredentials: true
       });
       const filterNotes = search ? 
@@ -40,7 +40,7 @@ const Home = () => {
 
   const handleDelete = async (id) => {
     try{
-       await axios.delete(`http://localhost:5000/api/notes/delete/${id}`,{
+       await axios.delete(`${__API_URL__}/api/notes/delete/${id}`,{
         withCredentials: true
       });
       setNotes(notes.filter((note)=> note._id !==id))

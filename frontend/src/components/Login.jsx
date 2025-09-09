@@ -18,7 +18,7 @@ const Login = ({ setUser }) => {
 
     try {
       
-      await axios.post("/api/auth/login/send", { email }, {
+      await axios.post(`${__API_URL__}/api/auth/login/send`, { email }, {
         headers: { "Content-Type": "application/json" },
       });
       setOtpSent(true);
@@ -36,7 +36,7 @@ const Login = ({ setUser }) => {
     try {
       
       const { data } = await axios.post(
-  "/api/auth/login/verify",
+  `${__API_URL__}/api/auth/login/verify`,
   {
     email: email,
     otp: String(otp).trim(), 

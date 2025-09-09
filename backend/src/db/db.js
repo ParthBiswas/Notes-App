@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 // import 'dotenv/config'
 
-console.log("MONGO_URI:", process.env.MONGO_URL); 
+
 
 export function connectDB(){
     

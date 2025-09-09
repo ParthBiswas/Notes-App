@@ -17,7 +17,7 @@ const Signup = ({ setUser }) => {
 
     try {
       await axios.post(
-        "/api/auth/signup/send",
+       ` ${__API_URL__}/api/auth/signup/send`,
         { name,dob,email },
         { headers: { "Content-Type": "application/json" } }
       );
@@ -34,7 +34,7 @@ const Signup = ({ setUser }) => {
 
     try {
       const { data } = await axios.post(
-        "/api/auth/signup/verify",
+        `${__API_URL__}/api/auth/signup/verify`,
         { email, otp: String(otp).trim() },
         { headers: { "Content-Type": "application/json" }, withCredentials: true }
       );
