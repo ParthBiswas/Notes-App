@@ -5,18 +5,25 @@ import path from "path";
 import { fileURLToPath } from "url";
 import 'dotenv/config'
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = path.dirname(__filename);
 
 
-// const __dirname = path.resolve();
+const __dirname = path.resolve();
+
+// if (process.env.NODE_ENV === "production") {
+//   app.use(express.static(path.join(__dirname, "frontend", "dist")));
+
+//   app.use((req, res) => {
+//     res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
+//   });
+// }
 
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "frontend", "dist")));
-
-  app.use((req, res) => {
-    res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
-  });
+    app.use(express.static(path.join(__dirname,"/frontend/dist")));
+    app.get("/{*splat}",(req,res) =>{
+        res.sendFile(path.resolve(__dirname,"frontend","dist","index.html"));
+    });
 }
 
 
