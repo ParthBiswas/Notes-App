@@ -1,3 +1,4 @@
+import express from "express";
 import app from './src/app.js';
 import { connectDB } from './src/db/db.js';
 import path from "path";
