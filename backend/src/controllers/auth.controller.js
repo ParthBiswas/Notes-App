@@ -59,11 +59,11 @@ export async function OtpController(req,res){
     }
 
     const otp = crypto.randomInt(100000, 900000).toString();
-    otpStore[email]= {otp, Expire:Date.now() + Number(process.env.OTP_EXPIRE), userData: { name, dob, email }};
+    otpStore[normalizedEmail]= {otp, Expire:Date.now() + Number(process.env.OTP_EXPIRE), userData: { name, dob, email: normalizedEmail }};
 
     try{
         await sendMail(
-            email,
+            normalizedEmail,
             'Your OTP',
             `Your OTP is ${otp}. It's Expire in ${process.env.OTP_EXPIRE/ 60000} Minutes`
         );
@@ -137,14 +137,6 @@ export async function loginOtpController(req, res) {
         return res.status(401).json({ message: "User not found" });
     }
 
-    const token = generateToken(user);
-    
-    // Set cookie
-    res.cookie("token", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax"
-    });
     
     // Generate OTP
     const otp = crypto.randomInt(100000, 900000).toString();
@@ -153,11 +145,9 @@ export async function loginOtpController(req, res) {
         expire: Date.now() + Number(process.env.OTP_EXPIRE),
     };
 
-   
-
     try {
         await sendMail(
-            email,
+            normalizedEmail,
             "Your Login OTP",
             `Your OTP is ${otp}. It expires in ${process.env.OTP_EXPIRE / 60000} minutes`
         );
@@ -186,8 +176,6 @@ export async function loginVerifyController(req, res) {
         return res.status(401).json({ message: "OTP Not Found" });
     }
 
-  
-
 
     if (Date.now() > record.expire) {
         delete otpStore[normalizedEmail];
@@ -197,7 +185,6 @@ export async function loginVerifyController(req, res) {
     if (String(record.otp).trim() !== String(otp).trim()) {
     return res.status(401).json({ message: "Invalid OTP" });
 }
-
 
 
     delete otpStore[normalizedEmail];
