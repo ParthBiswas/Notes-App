@@ -18,7 +18,7 @@ const Navbar = ({user, setUser}) => {
         e.preventDefault();
         
          try {
-      await axios.post(`${__API_URL__}/api/auth/logout`, {}, { withCredentials: true }); 
+      await axios.post(`/api/auth/logout`, {}, { withCredentials: true }); 
       setUser(null); // 👈 clear user state after logout
        navigate("/login");
     } catch (err) {
