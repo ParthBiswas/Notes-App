@@ -103,8 +103,8 @@ export async function verifyController(req,res){
         // Set cookie
         res.cookie("token", token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production", // only https in production
-            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax"
+            secure: process.env.NODE_ENV , // only https in production
+            sameSite: process.env.NODE_ENV  ? "none" : "lax"
         });
 
 
@@ -138,8 +138,8 @@ export async function loginOtpController(req, res) {
     // Set cookie
     res.cookie("token", token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax"
+        secure: process.env.NODE_ENV ,
+        sameSite: process.env.NODE_ENV  ? "none" : "lax"
     });
     
     // Generate OTP
@@ -203,8 +203,8 @@ export async function loginVerifyController(req, res) {
     // Set cookie
     res.cookie("token", token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production" ,
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax"
+        secure: process.env.NODE_ENV  ,
+        sameSite: process.env.NODE_ENV  ? "none" : "lax"
     });
     
 
@@ -216,8 +216,8 @@ export async function logoutController(req, res) {
     try {
         res.clearCookie("token", {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production" ,
-            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+            secure: process.env.NODE_ENV  ,
+            sameSite: process.env.NODE_ENV  ? "none" : "lax",
         });
 
         return res.status(200).json({ success: true, message: "Logged out successfully" });
