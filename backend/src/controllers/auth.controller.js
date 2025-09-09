@@ -45,8 +45,10 @@ export async function OtpController(req,res){
         });
     }
 
+    const normalizedEmail = email.toLowerCase().trim();
+
     const exsistEmail = await userModel.findOne({
-        email
+        email: normalizedEmail
     });
 
     if(exsistEmail){
@@ -74,13 +76,16 @@ export async function OtpController(req,res){
 
 export async function verifyController(req,res){
     const {email,otp} = req.body;
-    const record = otpStore[email]
+    const normalizedEmail = email.toLowerCase().trim();
+
+    const record = otpStore[normalizedEmail]
 
     if(!record){
         return res.status(401).json({message:"OTP Not Found"});
     }
 
     if(Date.now() > record.Expire){
+        delete otpStore[normalizedEmail];
         return res.status(401).json({message:"OTP Expire"});
     }
 
@@ -93,10 +98,10 @@ export async function verifyController(req,res){
     const {name,dob} = record.userData;
 
     const user = await userModel.create({
-    name, dob, email
+    name, dob, email: normalizedEmail
     }); 
 
-    delete otpStore[email];
+    delete otpStore[normalizedEmail];
 
     const token = generateToken(user);
 
@@ -119,16 +124,15 @@ export async function verifyController(req,res){
 // Step 1: Send OTP for login
 export async function loginOtpController(req, res) {
     const { email } = req.body;
-    
-    // console.log("Generated OTP:", otp, typeof otp);
-
 
     if (!email) {
         return res.status(401).json({ message: "Email is required" });
     }
 
+     const normalizedEmail = email.toLowerCase().trim();
+
     // Check if user exists
-    const user = await userModel.findOne({ email });
+    const user = await userModel.findOne({ email: normalizedEmail });
     if (!user) {
         return res.status(401).json({ message: "User not found" });
     }
@@ -144,7 +148,7 @@ export async function loginOtpController(req, res) {
     
     // Generate OTP
     const otp = crypto.randomInt(100000, 900000).toString();
-    otpStore[email] = {
+    otpStore[normalizedEmail] = {
         otp,
         expire: Date.now() + Number(process.env.OTP_EXPIRE),
     };
@@ -167,16 +171,16 @@ export async function loginOtpController(req, res) {
 // Step 2: Verify OTP for login
 export async function loginVerifyController(req, res) {
     const { email, otp } = req.body;
+    const normalizedEmail = email.toLowerCase().trim();
     
-    
-    const user = await userModel.findOne({ email });
+    const user = await userModel.findOne({ email: normalizedEmail });
     
     if (!user) {
         return res.status(401).json({ message: "User not found" });
         
     }
 
-    const record = otpStore[email];
+    const record = otpStore[normalizedEmail];
 
     if (!record) {
         return res.status(401).json({ message: "OTP Not Found" });
@@ -186,7 +190,7 @@ export async function loginVerifyController(req, res) {
 
 
     if (Date.now() > record.expire) {
-        delete otpStore[email];
+        delete otpStore[normalizedEmail];
         return res.status(401).json({ message: "OTP Expired" });
     }
 
@@ -196,7 +200,7 @@ export async function loginVerifyController(req, res) {
 
 
 
-    delete otpStore[email];
+    delete otpStore[normalizedEmail];
 
     const token = generateToken(user);
     
